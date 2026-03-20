@@ -1,625 +1,652 @@
 <!DOCTYPE html>
-<html lang="es" class="dark">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRUD Moderno - z-jackett</title>
-    <style>
-        :root {
-            --bg-primary: #0f0f0f;
-            --bg-secondary: #1a1a1a;
-            --bg-card: #2d2d2d;
-            --text-primary: #ffffff;
-            --text-secondary: #a0a0a0;
-            --accent: #ff6b35;
-            --accent-hover: #ff8c5a;
-            --border: #404040;
-            --success: #10b981;
-            --danger: #ef4444;
-        }
+<html lang="es">
 
-        * {
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>z-jackett.js - Framework Reactivo Minimalista</title>
+    <style>
+        /* Fuentes y reset */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+
+        body,
+        html {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            height: 100%;
+            font-family: 'Roboto Mono', monospace;
+            background-color: #1a1a1a;
+            color: #ffdb4d;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            padding: 20px;
-            min-height: 100vh;
+        header {
+            padding: 2rem 1rem 1rem;
+            text-align: center;
+            border-bottom: 1px solid #ffdb4d40;
+            width: 100%;
+            max-width: 900px;
         }
 
-        .container {
-            max-width: 1200px;
+        header h1 {
+            font-weight: 700;
+            font-size: 2.4rem;
+            margin-bottom: 0.25rem;
+            letter-spacing: 0.06em;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: #ffeea1;
+            max-width: 720px;
             margin: 0 auto;
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 3rem;
-            padding: 2rem 0;
-            border-bottom: 2px solid var(--accent);
+        .github-banner {
+            margin-top: 1rem;
         }
 
-        .header h1 {
-            font-size: 2.5rem;
-            background: linear-gradient(135deg, var(--accent), #ff8c00);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 0.5rem;
-        }
-
-        .header p {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-        }
-
-        .crud-grid {
-            display: grid;
-            grid-template-columns: 1fr 400px;
-            gap: 2rem;
-            align-items: start;
-        }
-
-        @media (max-width: 768px) {
-            .crud-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Form Styles */
-        .form-section {
-            background: var(--bg-card);
-            padding: 2rem;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            box-shadow: 0 8px 32px rgba(255, 107, 53, 0.1);
-        }
-
-        .form-section h2 {
-            color: var(--accent);
-            margin-bottom: 1.5rem;
-            font-size: 1.5rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text-primary);
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
-        }
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .github-banner a {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--accent-hover);
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            border: 1px solid var(--border);
-        }
-
-        .btn-secondary:hover {
-            background: var(--border);
-        }
-
-        .btn-danger {
-            background: var(--danger);
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: #dc2626;
-            transform: translateY(-2px);
-        }
-
-        .btn-success {
-            background: var(--success);
-            color: white;
-        }
-
-        .btn-success:hover {
-            background: #059669;
-            transform: translateY(-2px);
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        /* List Styles */
-        .list-section {
-            background: var(--bg-card);
-            padding: 2rem;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            box-shadow: 0 8px 32px rgba(255, 107, 53, 0.1);
-        }
-
-        .list-section h2 {
-            color: var(--accent);
-            margin-bottom: 1.5rem;
-            font-size: 1.5rem;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: var(--bg-secondary);
-            padding: 1rem;
-            border-radius: 8px;
-            text-align: center;
-            border-left: 4px solid var(--accent);
-        }
-
-        .stat-number {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--accent);
-        }
-
-        .stat-label {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-        }
-
-        .items-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .item-card {
-            background: var(--bg-secondary);
-            padding: 1.5rem;
-            border-radius: 8px;
-            border: 1px solid var(--border);
+            background: #ffdb4d;
+            color: #1a1a1a;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
             transition: all 0.3s ease;
         }
 
-        .item-card:hover {
-            border-color: var(--accent);
+        .github-banner a:hover {
+            background: #f2c100;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.2);
         }
 
-        .item-header {
+        main {
+            max-width: 900px;
+            width: 95%;
+            padding: 2rem 1rem 4rem;
             display: flex;
-            justify-content: space-between;
-            align-items: start;
-            margin-bottom: 1rem;
+            flex-direction: column;
+            gap: 2rem;
         }
 
-        .item-title {
-            font-size: 1.25rem;
+        section {
+            background: #292929;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 0 15px #ffdb4d50;
+        }
+
+        section h2 {
+            margin-top: 0;
+            color: #ffdb4d;
+            font-weight: 700;
+            font-size: 1.6rem;
+            border-bottom: 2px solid #ffdb4d;
+            padding-bottom: 0.3rem;
+            letter-spacing: 0.04em;
+        }
+
+        section p {
+            font-size: 1rem;
+            line-height: 1.4;
+            margin-bottom: 1rem;
+            color: #fff6c6;
+        }
+
+        ul {
+            color: #fff2a6;
+            padding-left: 1.5rem;
+        }
+
+        ul li {
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        /* Botones para ejemplos */
+        button {
+            background-color: #ffdb4d;
+            border: none;
+            padding: 0.5rem 1rem;
             font-weight: 600;
-            color: var(--text-primary);
+            font-size: 1rem;
+            color: #1a1a1a;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            margin: 0.25rem;
         }
 
-        .item-category {
-            background: var(--accent);
-            color: white;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.875rem;
-            font-weight: 500;
+        button:hover {
+            background-color: #f2c100;
         }
 
-        .item-description {
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-            line-height: 1.5;
+        /* Ejemplos contenedores */
+        .example {
+            background: #1f1f1f;
+            border: 1px solid #ffdb4d90;
+            padding: 1rem;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.95rem;
+            margin-top: 1rem;
         }
 
-        .item-footer {
+        input[type="text"],
+        input[type="number"],
+        select {
+            padding: 0.5rem;
+            border-radius: 5px;
+            border: none;
+            font-size: 1rem;
+            margin: 0.25rem 0;
+            background: #333;
+            color: #ffdb4d;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        input[type="checkbox"],
+        input[type="radio"] {
+            margin-right: 0.5rem;
+        }
+
+        label {
+            cursor: pointer;
+            user-select: none;
+            display: block;
+            margin: 0.75rem 0;
+        }
+
+        code {
+            background: #333;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            color: #ffdb4d;
+        }
+
+        /* Responsive para móvil */
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            section h2 {
+                font-size: 1.3rem;
+            }
+
+            button {
+                width: 100%;
+                margin: 0.25rem 0;
+            }
+
+            li button {
+                width: 50%;
+            }
+
+            .mobile-flex {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+
+        /* Estilos para ejemplos específicos */
+        .resaltado {
+            background-color: #ffdb4d;
+            color: #1a1a1a;
+            padding: 0.4rem 0.8rem;
+            border-radius: 5px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .normal {
+            color: #ffc;
+            padding: 0.4rem 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .transition-element {
+            transition: all 0.5s ease;
+            padding: 1rem;
+            background: #333;
+            border-radius: 5px;
+            margin-top: 1rem;
+        }
+
+        .fade-enter {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        .fade-leave {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .fade-enter-active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .fade-leave-active {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        /* Mejoras para z-for */
+        .task-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 0.5rem;
+            margin: 0.25rem 0;
+            background: #333;
+            border-radius: 5px;
+        }
+
+        .task-text {
+            flex-grow: 1;
+            margin-right: 1rem;
+        }
+
+        /* Mejoras para refs */
+        .color-box {
             margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid var(--border);
+            padding: 1rem;
+            background: #333;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .item-price {
-            font-size: 1.125rem;
-            font-weight: bold;
-            color: var(--accent);
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 3rem;
-            color: var(--text-secondary);
-        }
-
-        .empty-state i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            opacity: 0.5;
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.5s ease;
-        }
-
-        /* Icons */
-        .icon {
-            width: 20px;
-            height: 20px;
+        /* Grid para formularios en desktop */
+        @media (min-width: 601px) {
+            .form-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 1rem;
+                align-items: start;
+            }
+            
+            .form-grid .full-width {
+                grid-column: 1 / -1;
+            }
+            
+            input[type="text"],
+            input[type="number"] {
+                width: 100%;
+            }
         }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🛍️ Tienda CRUD</h1>
-            <p>Gestiona tus productos con z-jackett - Framework Reactivo</p>
+
+    <header>
+        <h1>z-jackett.js</h1>
+        <p>Un framework JavaScript <strong>reactivo</strong> y <strong>minimalista</strong> para construir interfaces modernas con HTML declarativo y reactividad sencilla.</p>
+        
+        <div class="github-banner">
+            <a href="https://github.com/zabr-76/zjs" target="_blank">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                </svg>
+                Ver en GitHub
+            </a>
+            <p style="margin-top: 0.5rem; font-size: 0.9rem; color: #ffeea1;">           
+                CDN: <code>https://cdn.jsdelivr.net/gh/zabr-76/Zjs/dist/z-jackett.js</code>
+            </p>
         </div>
+    </header>
 
-        <div z-app z-data="crudApp()" class="crud-grid">
-            <!-- Formulario -->
-            <div class="form-section fade-in">
-                <h2>
-                    <span z-text="editingIndex === null ? '➕ Agregar Producto' : '✏️ Editar Producto'"></span>
-                </h2>
-                
-                <form @submit.prevent="saveProduct()">
-                    <div class="form-group">
-                        <label for="name">Nombre del Producto</label>
-                        <input 
-                            type="text" 
-                            id="name"
-                            z-model="form.name"
-                            class="form-control" 
-                            placeholder="Ej: Laptop Gaming"
-                            required
-                        >
-                    </div>
+    <main>
+        <section>
+            <h2>¿Qué es z-jackett.js?</h2>
+            <p>Es un framework que permite enlazar datos y estructura en HTML usando atributos personalizados. Al actualizar los datos, la interfaz se cambia automáticamente sin intervención manual.</p>
+            <p>Funciones clave:</p>
+            <ul>
+                <li>Reactividad profunda sobre objetos y arrays</li>
+                <li>Enlace dinámico de texto, HTML y atributos (z-text, z-html, z-bind)</li>
+                <li>Control condicional de visibilidad (z-show, z-if)</li>
+                <li>Listados reactivos con z-for</li>
+                <li>Sincronización fácil con inputs mediante z-model</li>
+                <li>Clases dinámicas con z-class o :class</li>
+                <li>Animaciones suaves con z-transition</li>
+                <li>Acceso directo a elementos con referencias ($refs) usando z-ref</li>
+            </ul>
+        </section>
 
-                    <div class="form-group">
-                        <label for="category">Categoría</label>
-                        <select 
-                            id="category"
-                            z-model="form.category" 
-                            class="form-control"
-                            required
-                        >
-                            <option value="">Seleccionar categoría</option>
-                            <option value="Tecnología">💻 Tecnología</option>
-                            <option value="Hogar">🏠 Hogar</option>
-                            <option value="Ropa">👕 Ropa</option>
-                            <option value="Deportes">⚽ Deportes</option>
-                            <option value="Otros">📦 Otros</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="price">Precio ($)</label>
-                        <input 
-                            type="number" 
-                            id="price"
-                            z-model.number="form.price"
-                            class="form-control" 
-                            placeholder="0.00"
-                            step="0.01"
-                            min="0"
-                            required
-                        >
-                    </div>
-
-                    <div class="form-group">
-                        <label for="description">Descripción</label>
-                        <textarea 
-                            id="description"
-                            z-model="form.description"
-                            class="form-control" 
-                            rows="3"
-                            placeholder="Describe el producto..."
-                        ></textarea>
-                    </div>
-
-                    <div class="btn-group">
-                        <button type="submit" class="btn btn-primary">
-                            <span z-text="editingIndex === null ? '💾 Guardar' : '🔄 Actualizar'"></span>
-                        </button>
-                        
-                        <button 
-                            type="button" 
-                            class="btn btn-secondary" 
-                            @click="resetForm()"
-                            z-show="editingIndex !== null"
-                        >
-                            ❌ Cancelar
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Lista de Productos -->
-            <div class="list-section fade-in">
-                <h2>📦 Productos Registrados</h2>
-                
-                <!-- Estadísticas -->
-                <div class="stats">
-                    <div class="stat-card">
-                        <div class="stat-number" z-text="products.length"></div>
-                        <div class="stat-label">Total</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" z-text="totalValue.toFixed(2)"></div>
-                        <div class="stat-label">Valor Total</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" z-text="categories.length"></div>
-                        <div class="stat-label">Categorías</div>
+        <!-- Ejemplo z-model -->
+        <section z-app z-data="modelExample()">
+            <h2>Ejemplo: z-model (Enlace de formulario)</h2>
+            <div class="example form-grid">
+                <div>
+                    <label>Nombre: <input type="text" z-model="nombre" /></label>
+                    <label>Edad: <input type="number" z-model.number="edad" /></label>
+                </div>
+                <div>
+                    <label><input type="checkbox" z-model="acepta" /> Acepta términos</label>
+                    <div>
+                        <label><input type="radio" name="genero" value="masculino" z-model="genero" /> Masculino</label>
+                        <label><input type="radio" name="genero" value="femenino" z-model="genero" /> Femenino</label>
                     </div>
                 </div>
+                <div class="full-width">
+                    <p>Nombre en tiempo real: <strong z-text="nombre"></strong></p>
+                    <p>Edad en tiempo real: <strong z-text="edad"></strong></p>
+                    <p>Acepta términos: <strong z-text="acepta ? 'Sí' : 'No'"></strong></p>
+                    <p>Género: <strong z-text="genero"></strong></p>
+                </div>
+            </div>
+        </section>
 
-                <!-- Lista -->
-                <div class="items-list">
-                    <template z-for="product in products" :key="product.id">
-                        <div class="item-card fade-in">
-                            <div class="item-header">
-                                <div class="item-title" z-text="product.name"></div>
-                                <div class="item-category" z-text="product.category"></div>
-                            </div>
-                            
-                            <div class="item-description" z-text="product.description"></div>
-                            
-                            <div class="item-footer">
-                                <div class="item-price" z-text="'$' + product.price.toFixed(2)"></div>
-                                <div class="btn-group">
-                                    <button 
-                                        class="btn btn-secondary" 
-                                        @click="editProduct(product.id)"
-                                        title="Editar"
-                                    >
-                                        ✏️
-                                    </button>
-                                    <button 
-                                        class="btn btn-danger" 
-                                        @click="deleteProduct(product.id)"
-                                        title="Eliminar"
-                                    >
-                                        🗑️
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+        <!-- Ejemplo z-for -->
+        <section z-app z-data="forExample()">
+            <h2>Ejemplo: z-for (Listados reactivos)</h2>
+            <div class="example">
+                <h3>Lista de tareas:</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <template z-for="tarea in tareas" :key="tarea.id">
+                        <li class="task-item">
+                            <span class="task-text" z-text="tarea.texto"></span>
+                            <button @click="eliminarTarea(tarea.id)">❌ Eliminar</button>
+                        </li>
                     </template>
-
-                    <!-- Estado vacío -->
-                    <div class="empty-state" z-show="products.length === 0">
-                        <div>📭</div>
-                        <h3>No hay productos</h3>
-                        <p>Agrega tu primer producto usando el formulario</p>
-                    </div>
+                </ul>
+                <div style="margin-top: 1rem;" class="mobile-flex">
+                    <input type="text" placeholder="Nueva tarea" z-model.trim="nuevaTarea" 
+                           @keyup.enter="agregarTarea()" />
+                    <button @click="agregarTarea()">➕ Agregar tarea</button>
                 </div>
+                <p style="margin-top: 1rem;">Total de tareas: <strong z-text="tareas.length"></strong></p>
+            </div>
+        </section>
 
-                <!-- Acciones globales -->
-                <div class="btn-group" style="margin-top: 2rem;" z-show="products.length > 0">
-                    <button class="btn btn-success" @click="exportData()">
-                        📤 Exportar JSON
-                    </button>
-                    <button class="btn btn-secondary" @click="importData()">
-                        📥 Importar JSON
-                    </button>
-                    <button class="btn btn-danger" @click="clearAll()">
-                        🗑️ Limpiar Todo
-                    </button>
+        <!-- Ejemplo z-show -->
+        <section z-app z-data="showExample()">
+            <h2>Ejemplo: z-show (Mostrar/ocultar)</h2>
+            <div class="example">
+                <button @click="mostrar = !mostrar">
+                    <span z-text="mostrar ? '👁️ Ocultar' : '👁️ Mostrar'"></span> mensaje
+                </button>
+                <p z-show="mostrar" style="margin-top: 1rem; padding: 1rem; background: #333; border-radius: 5px;">
+                    Este texto sólo aparece si <code>mostrar</code> es verdadero.
+                </p>
+                <p>Estado actual: <strong z-text="mostrar ? '👁️ VISIBLE' : '👁️ OCULTO'"></strong></p>
+            </div>
+        </section>
+
+        <!-- Ejemplo z-if -->
+        <section z-app z-data="ifExample()">
+            <h2>Ejemplo: z-if (Render condicional)</h2>
+            <div class="example">
+                <button @click="mostrar = !mostrar">
+                    <span z-text="mostrar ? '❌ Ocultar' : '✅ Mostrar'"></span> contenido
+                </button>
+                <template z-if="mostrar">
+                    <div style="margin-top: 1rem; padding: 1rem; background: #444; border-radius: 5px;">
+                        <p>✅ El contenido se renderiza SOLO si <code>mostrar</code> es verdadero.</p>
+                        <p>Este elemento se crea/destruye del DOM completamente.</p>
+                    </div>
+                </template>
+                <p style="margin-top: 1rem;">Estado: <strong z-text="mostrar ? '🔄 RENDERIZADO' : '⏸️ NO RENDERIZADO'"></strong></p>
+            </div>
+        </section>
+
+        <!-- Ejemplo z-class -->
+        <section z-app z-data="classExample()">
+            <h2>Ejemplo: z-class (Clases dinámicas)</h2>
+            <div class="example">
+                <div class="mobile-flex">
+                    <button @click="activo = !activo">🎨 Alternar clase</button>
+                    <button @click="tamano = (tamano === 'pequeno' ? 'grande' : 'pequeno')">📏 Cambiar tamaño</button>
+                </div>
+                
+                <p z-class="{ 
+                    'resaltado': activo, 
+                    'normal': !activo,
+                    'grande': tamano === 'grande'
+                }" style="margin-top: 1rem;">
+                    Texto con clases dinámicas
+                </p>
+                
+                <p>Estado: <strong z-text="activo ? '🎯 RESALTADO' : '📝 NORMAL'"></strong></p>
+                <p>Tamaño: <strong z-text="tamano === 'grande' ? '📏 GRANDE' : '📏 PEQUEÑO'"></strong></p>
+            </div>
+            <style>
+                .grande {
+                    font-size: 1.5rem;
+                    font-weight: bold;
+                }
+            </style>
+        </section>
+
+        <!-- Ejemplo :class -->
+        <section z-app z-data="bindClassExample()">
+            <h2>Ejemplo: :class (Clases dinámicas con binding)</h2>
+            <div class="example">
+                <button @click="estado = (estado === 'exito' ? 'error' : 'exito')">
+                    🔄 Cambiar estado: <span z-text="estado"></span>
+                </button>
+                
+                <div :class="clasesDinamicas()" style="margin-top: 1rem; padding: 1rem; border-radius: 5px;">
+                    Este div cambia de clase según el estado
+                </div>
+                
+                <p>Clases aplicadas: <code z-text="clasesActuales()"></code></p>
+            </div>
+            <style>
+                .estado-exito {
+                    background: #10b981;
+                    color: white;
+                    border: 2px solid #059669;
+                }
+                .estado-error {
+                    background: #ef4444;
+                    color: white;
+                    border: 2px solid #dc2626;
+                }
+                .borde-redondeado {
+                    border-radius: 10px;
+                }
+            </style>
+        </section>
+
+        <!-- Ejemplo z-transition -->
+        <section z-app z-data="transitionExample()">
+            <h2>Ejemplo: z-transition (Transiciones)</h2>
+            <div class="example">
+                <button @click="visible = !visible">
+                    <span z-text="visible ? '👁️ Ocultar' : '👁️ Mostrar'"></span> con transición
+                </button>
+                
+                <div z-show="visible" z-transition="fade" class="transition-element">
+                    <p>✅ Este elemento aparece/desaparece con transición suave.</p>
+                    <p>Usando transiciones CSS personalizadas.</p>
+                </div>
+                
+                <p>Estado: <strong z-text="visible ? '👁️ VISIBLE' : '👁️ OCULTO'"></strong></p>
+            </div>
+        </section>
+
+        <!-- Ejemplo refs -->
+        <section z-app z-data="refsExample()">
+            <h2>Ejemplo: Refs ($refs)</h2>
+            <div class="example">
+                <div class="mobile-flex">
+                    <input type="text" z-model="nombre" z-ref="inputName" placeholder="Escribe aquí..." />
+                    <button @click="focusInput()">🔍 Focar input</button>
+                    <button @click="cambiarColor()">🎨 Cambiar color</button>
+                </div>
+                
+                <div style="margin-top: 1rem;" class="mobile-flex">
+                    <p>Contador: <strong z-text="count"></strong></p>
+                    <button @click="count++">➕ Incrementar</button>
+                    <button @click="count--">➖ Decrementar</button>
+                </div>
+                
+                <div class="color-box" z-ref="colorBox">
+                    Esta caja cambiará de color (mantiene estilo)
                 </div>
             </div>
-        </div>
-    </div>
+        </section>
 
-    <script src="z-jackett.js"></script>
+        <!-- Ejemplo computadas y métodos -->
+        <section z-app z-data="computedExample()">
+            <h2>Ejemplo: Propiedades Computadas</h2>
+            <div class="example form-grid">
+                <div>
+                    <label>Precio: <input type="number" z-model.number="precio" /></label>
+                    <label>Impuesto (%): <input type="number" z-model.number="impuesto" /></label>
+                    <label>Descuento (%): <input type="number" z-model.number="descuento" /></label>
+                </div>
+                <div>
+                    <p>Precio base: <strong>$<span z-text="precio.toFixed(2)"></span></strong></p>
+                    <p>Impuesto: <strong>$<span z-text="impuestoCalculado.toFixed(2)"></span></strong></p>
+                    <p>Descuento: <strong>$<span z-text="descuentoCalculado.toFixed(2)"></span></strong></p>
+                    <p style="font-size: 1.2rem; color: #ffdb4d;">
+                        Precio final: <strong>$<span z-text="precioFinal.toFixed(2)"></span></strong>
+                    </p>
+                </div>
+            </div>
+        </section>
 
+    </main>
+
+    <!-- CDN para usar en producción -->
+    <script src="https://cdn.jsdelivr.net/gh/zabr-76/Zjs/dist/z-jackett.js"></script>    <!-- Para desarrollo local: -->
+    <!--<script src="z-jackett.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/gh/zabr-76/Zjs/dist/z-inspector.js"></script>
+    <!--<script src="./z-inspector.js"></script> -->
     <script>
-        function crudApp() {
+        //window.Z_DEBUG = true;
+
+        function modelExample() {
             return {
-                // Estado de la aplicación
-                products: [
-                    {
-                        id: 1,
-                        name: "Laptop Gaming",
-                        category: "Tecnología",
-                        price: 1200.00,
-                        description: "Laptop potente para gaming y trabajo"
-                    },
-                    {
-                        id: 2,
-                        name: "Auriculares Bluetooth",
-                        category: "Tecnología",
-                        price: 89.99,
-                        description: "Sonido de alta calidad sin cables"
-                    },
-                    {
-                        id: 3,
-                        name: "Silla Ergonómica",
-                        category: "Hogar",
-                        price: 299.50,
-                        description: "Comodidad para largas horas de trabajo"
-                    }
+                nombre: 'Zenón A. Bastidas R.',
+                edad: 49,
+                acepta: false,
+                genero: 'masculino'
+            };
+        }
+
+        function forExample() {
+            return {
+                tareas: [
+                    { id: 1, texto: 'Aprender z-jackett.js' },
+                    { id: 2, texto: 'Construir una aplicación' },
+                    { id: 3, texto: 'Compartir el proyecto' }
                 ],
-                
-                // Formulario
-                form: {
-                    name: "",
-                    category: "",
-                    price: 0,
-                    description: ""
-                },
-                
-                // Control de edición
-                editingIndex: null,
-                
-                // Propiedades computadas
-                get totalValue() {
-                    return this.products.reduce((total, product) => total + product.price, 0);
-                },
-                
-                get categories() {
-                    const uniqueCategories = new Set(this.products.map(p => p.category));
-                    return Array.from(uniqueCategories);
-                },
-                
-                // Métodos CRUD
-                saveProduct() {
-                    if (this.editingIndex === null) {
-                        // Crear nuevo producto
-                        const newProduct = {
-                            id: Date.now(), // ID único basado en timestamp
-                            ...this.form
-                        };
-                        this.products.push(newProduct);
-                    } else {
-                        // Actualizar producto existente
-                        this.products[this.editingIndex] = {
-                            ...this.products[this.editingIndex],
-                            ...this.form
-                        };
-                    }
-                    
-                    this.resetForm();
-                },
-                
-                editProduct(productId) {
-                    const index = this.products.findIndex(p => p.id === productId);
-                    if (index !== -1) {
-                        this.form = { ...this.products[index] };
-                        this.editingIndex = index;
+                nuevaTarea: '',
+                agregarTarea() {
+                    if (this.nuevaTarea.trim()) {
+                        this.tareas.push({
+                            id: Date.now(),
+                            texto: this.nuevaTarea
+                        });
+                        this.nuevaTarea = '';
                     }
                 },
-                
-                deleteProduct(productId) {
-                    if (confirm('¿Estás seguro de que quieres eliminar este producto?')) {
-                        const index = this.products.findIndex(p => p.id === productId);
-                        if (index !== -1) {
-                            this.products.splice(index, 1);
-                        }
-                    }
+                eliminarTarea(id) {
+                    this.tareas = this.tareas.filter(t => t.id !== id);
+                }
+            };
+        }
+
+        function showExample() {
+            return {
+                mostrar: false
+            };
+        }
+
+        function ifExample() {
+            return {
+                mostrar: false
+            };
+        }
+
+        function classExample() {
+            return {
+                activo: false,
+                tamano: 'pequeno'
+            };
+        }
+
+        function bindClassExample() {
+    return {
+        estado: 'exito',
+        
+        // SOLUCIÓN: Hacerla función normal pero asegurar reactividad
+        clasesDinamicas() {
+            return {
+                'estado-exito': this.estado === 'exito',
+                'estado-error': this.estado === 'error',
+                'borde-redondeado': true
+            };
+        },
+        
+        // Y esta también como función normal
+        clasesActuales() {
+            const clases = this.clasesDinamicas();
+            return Object.keys(clases)
+                .filter(cls => clases[cls])
+                .join(', ');
+        }
+    };
+}
+
+        function transitionExample() {
+            return {
+                visible: false
+            };
+        }
+
+function refsExample() {
+    return {
+        nombre: '',
+        count: 0,
+        focusInput() {
+            setTimeout(() => {
+                const input = document.querySelector('input[z-ref="inputName"]') || this.$refs?.inputName;
+                input?.focus();
+            }, 50);
+        },
+        cambiarColor() {
+            this.$refs?.colorBox && (this.$refs.colorBox.style.backgroundColor = 
+                ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57'][Math.floor(Math.random() * 5)]);
+        }
+    };
+}
+
+        function computedExample() {
+            return {
+                precio: 100,
+                impuesto: 21,
+                descuento: 10,
+                impuestoCalculado() {
+                    return this.precio * (this.impuesto / 100);
                 },
-                
-                resetForm() {
-                    this.form = {
-                        name: "",
-                        category: "",
-                        price: 0,
-                        description: ""
-                    };
-                    this.editingIndex = null;
+                descuentoCalculado() {
+                    return this.precio * (this.descuento / 100);
                 },
-                
-                clearAll() {
-                    if (confirm('¿Estás seguro de que quieres eliminar todos los productos?')) {
-                        this.products = [];
-                    }
-                },
-                
-                exportData() {
-                    const dataStr = JSON.stringify(this.products, null, 2);
-                    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-                    
-                    const exportFileDefaultName = 'productos.json';
-                    
-                    const linkElement = document.createElement('a');
-                    linkElement.setAttribute('href', dataUri);
-                    linkElement.setAttribute('download', exportFileDefaultName);
-                    linkElement.click();
-                },
-                
-                importData() {
-                    const input = document.createElement('input');
-                    input.type = 'file';
-                    input.accept = '.json';
-                    
-                    input.onchange = e => {
-                        const file = e.target.files[0];
-                        const reader = new FileReader();
-                        
-                        reader.onload = event => {
-                            try {
-                                const importedData = JSON.parse(event.target.result);
-                                if (Array.isArray(importedData)) {
-                                    this.products = importedData;
-                                    alert('Productos importados correctamente!');
-                                } else {
-                                    alert('El archivo no contiene datos válidos');
-                                }
-                            } catch (error) {
-                                alert('Error al importar el archivo: ' + error.message);
-                            }
-                        };
-                        
-                        reader.readAsText(file);
-                    };
-                    
-                    input.click();
-                },
-                
-                // Utilidades
-                generateId() {
-                    return Math.max(0, ...this.products.map(p => p.id)) + 1;
+                precioFinal() {
+                    return this.precio + this.impuestoCalculado - this.descuentoCalculado;
                 }
             };
         }
     </script>
+
 </body>
+
 </html>
