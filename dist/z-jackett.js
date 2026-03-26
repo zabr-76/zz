@@ -847,169 +847,180 @@
             el.addEventListener('blur', blurListener);
         }
     }
-    
-    function bindFor(el, ctx) {
-        const expr = el.getAttribute('z-for');
-        if (!expr) return;
 
-        const splitIndex = expr.indexOf(' in ');
-        if (splitIndex === -1) return;
+function bindFor(el, ctx) {
+    const expr = el.getAttribute('z-for');
+    if (!expr) return;
 
-        const itemName = expr.slice(0, splitIndex).trim();
-        const listExpr = expr.slice(splitIndex + 4).trim();
-        const keyExpr = el.getAttribute(':key');
+    const splitIndex = expr.indexOf(' in ');
+    if (splitIndex === -1) return;
 
-        log('🔍 [bindFor] INICIANDO:', {
-            expr,
-            itemName,
-            listExpr,
-            keyExpr
-        });
+    const itemName = expr.slice(0, splitIndex).trim();
+    const listExpr = expr.slice(splitIndex + 4).trim();
+    const keyExpr = el.getAttribute(':key');
 
-        // Ocultar el elemento original
-        el.style.display = 'none';
+    log(`[bindFor] Procesando: ${expr}`);
 
-        // Crear placeholder
-        if (!el.__z_for_placeholder) {
-            el.__z_for_placeholder = document.createComment('z-for');
-            el.parentNode.insertBefore(el.__z_for_placeholder, el.nextSibling);
-        }
+    el.style.display = 'none';
 
-        // Almacenar nodos actuales
-        let currentNodes = [];
-
-        function updateList() {
-            log('🔄 [bindFor] Actualizando lista...');
-
-            // Limpiar nodos anteriores
-            currentNodes.forEach(node => {
-                if (node.parentNode) {
-                    node.parentNode.removeChild(node);
-                }
-            });
-            currentNodes = [];
-
-            // Evaluar la lista
-            Dep.target = updateList;
-            const list = evalExpr(listExpr, ctx);
-            Dep.target = null;
-
-            log('📊 [bindFor] Lista obtenida:', list);
-
-            if (!Array.isArray(list) && !isObject(list)) {
-                log('⚠️ [bindFor] Lista vacía o inválida');
-                return;
-            }
-
-            // Convertir a array de entradas
-            let entries = [];
-            if (Array.isArray(list)) {
-                entries = list.map((item, index) => [index, item, index]);
-            } else {
-                entries = Object.entries(list)
-                    .filter(([key]) => !key.startsWith('__'))
-                    .map(([key, value], index) => [key, value, index]);
-            }
-
-            log('📋 [bindFor] Entries procesadas:', entries);
-
-            // Crear nuevos nodos
-            entries.forEach(([key, item, index]) => {
-                log(`🆕 [bindFor] Creando item ${index}:`, item);
-
-                let node;
-                if (el.tagName.toLowerCase() === 'template') {
-                    node = el.content.firstElementChild.cloneNode(true);
-                } else {
-                    node = el.cloneNode(true);
-                    node.style.display = '';
-                }
-
-                // Remover atributos del z-for original
-                node.removeAttribute('z-for');
-                if (node.hasAttribute(':key')) {
-                    node.removeAttribute(':key');
-                }
-
-                // ✅ CORRECCIÓN: Crear contexto con índice correcto
-                const itemCtx = createItemContext(ctx, itemName, item, index, key);
-
-                // Insertar en el DOM antes del placeholder
-                el.parentNode.insertBefore(node, el.__z_for_placeholder);
-                currentNodes.push(node);
-
-                // Procesar directivas en este nodo
-                processItemNode(node, itemCtx);
-            });
-
-            log('✅ [bindFor] Lista actualizada. Nodos creados:', currentNodes.length);
-        }
-
-        // ✅ CORREGIDO: Contexto con índice reactivo
-        function createItemContext(parentCtx, itemName, itemValue, index, originalKey) {
-            // Crear un objeto reactivo para este item específico
-            const itemData = {
-                [itemName]: itemValue,
-                index: index,
-                key: originalKey
-            };
-
-            // Hacerlo reactivo
-            const reactiveItemData = reactive(itemData);
-
-            // Combinar con el contexto padre usando prototipo
-            const ctx = Object.create(parentCtx);
-
-            // Copiar propiedades reactivas
-            Object.keys(reactiveItemData).forEach(key => {
-                Object.defineProperty(ctx, key, {
-                    get() {
-                        return reactiveItemData[key];
-                    },
-                    set(value) {
-                        reactiveItemData[key] = value;
-                    },
-                    enumerable: true,
-                    configurable: true
-                });
-            });
-
-            log(`🎭 [bindFor] Contexto creado para ${itemName}[${index}]:`, itemValue);
-            return ctx;
-        }
-
-        function processItemNode(node, itemCtx) {
-            log(`🔧 [bindFor] Procesando nodo del item:`, node.tagName);
-
-            // Asignar contexto
-            setNodeContext(node, itemCtx);
-
-            // Usar tu bindDirectives original
-            bindDirectives(node, itemCtx);
-        }
-
-        function isObject(obj) {
-            return obj && typeof obj === 'object' && !Array.isArray(obj);
-        }
-
-        // Observar cambios en la lista
-        log('🚀 [bindFor] Configurando observador para:', listExpr);
-
-        function effect() {
-            Dep.target = effect;
-            evalExpr(listExpr, ctx); // Establecer dependencia
-            Dep.target = null;
-
-            updateList();
-        }
-
-        // Ejecutar inicialmente
-        effect();
-        el.__z_for_effect = effect;
-
-        log('✅ [bindFor] bindFor completado');
+    if (!el.__z_for_placeholder) {
+        el.__z_for_placeholder = document.createComment('z-for placeholder');
+        el.parentNode.insertBefore(el.__z_for_placeholder, el.nextSibling);
     }
 
+    if (!el.__z_for_instances) {
+        el.__z_for_instances = new Map();
+    }
+    const instances = el.__z_for_instances;
+
+    // ✅ 1. FUNCIÓN CLEARALLNODES (faltaba)
+    function clearAllNodes() {
+        instances.forEach((instance) => {
+            if (instance.node.parentNode) {
+                instance.node.parentNode.removeChild(instance.node);
+            }
+        });
+        instances.clear();
+    }
+
+    // ✅ 2. CONTEXTOS REACTIVOS (del bindFor que funciona)
+    function createItemContext(parentCtx, itemName, itemValue, index, originalKey) {
+        const itemData = {
+            [itemName]: itemValue,
+            index: index,
+            key: originalKey
+        };
+        const reactiveItemData = reactive(itemData);
+        const ctxCopy = Object.create(parentCtx);
+        Object.keys(reactiveItemData).forEach(key => {
+            Object.defineProperty(ctxCopy, key, {
+                get() { return reactiveItemData[key]; },
+                set(value) { reactiveItemData[key] = value; },
+                enumerable: true,
+                configurable: true
+            });
+        });
+        return ctxCopy;
+    }
+
+    function createContext(parentCtx, itemName, itemValue, index) {  // Temporal para keyExpr
+        const ctx = {};
+        for (const key in parentCtx) {
+            if (Object.prototype.hasOwnProperty.call(parentCtx, key)) ctx[key] = parentCtx[key];
+        }
+        ctx[itemName] = itemValue;
+        ctx.index = index;
+        return ctx;
+    }
+
+    function updateList() {
+        Dep.target = updateList;
+        const list = evalExpr(listExpr, ctx);
+        Dep.target = null;
+
+        let currentList = [];
+        if (!Array.isArray(list) && typeof list === 'object') {
+            currentList = Object.entries(list).filter(([key, value]) => !key.startsWith('__'));
+        } else if (Array.isArray(list)) {
+            currentList = list;
+        } else {
+            clearAllNodes();
+            return;
+        }
+
+        const currentKeys = currentList.map((item, index) => {
+            let key = Array.isArray(item) ? item[0] : index;
+            if (keyExpr) {
+                const tempCtx = createContext(ctx, itemName, Array.isArray(item) ? item[1] : item, index);
+                key = evalExpr(keyExpr, tempCtx) || key;
+            }
+            return String(key);
+        });
+
+        const hasStableKeys = new Set(currentKeys).size === currentKeys.length;
+        log(`[bindFor] Claves:`, currentKeys, `Estables: ${hasStableKeys}`);
+
+        if (!hasStableKeys || !keyExpr) {
+            clearAllNodes();
+            currentList.forEach((item, index) => {
+                const key = currentKeys[index];
+                const itemValue = Array.isArray(item) ? item[1] : item;
+                createInstance(key, itemValue, index);
+            });
+            return;
+        }
+
+        // Optimización selectiva
+        const toRemove = [], toUpdate = [], toAdd = [];
+        instances.forEach((instance, key) => {
+            if (!currentKeys.includes(key)) toRemove.push(key);
+        });
+        currentKeys.forEach((key, index) => {
+            if (!instances.has(key)) {
+                toAdd.push({ key, index });
+            } else {
+                toUpdate.push({ key, index });
+            }
+        });
+
+        toRemove.forEach(key => {
+            const instance = instances.get(key);
+            if (instance.node.parentNode) instance.node.parentNode.removeChild(instance.node);
+            instances.delete(key);
+        });
+
+        toUpdate.forEach(({ key, index }) => {
+            const instance = instances.get(key);
+            const newItem = currentList[index];
+            const itemValue = Array.isArray(newItem) ? newItem[1] : newItem;
+            instance.context[itemName] = itemValue;
+            instance.context.index = index;
+            bindDirectives(instance.node, instance.context);
+        });
+
+        toAdd.forEach(({ key, index }) => {
+            const newItem = currentList[index];
+            const itemValue = Array.isArray(newItem) ? newItem[1] : newItem;
+            createInstance(key, itemValue, index);
+        });
+    }
+
+    function createInstance(key, item, index) {
+        let node;
+        if (el.tagName.toLowerCase() === 'template') {
+            node = el.content.firstElementChild.cloneNode(true);
+        } else {
+            node = el.cloneNode(true);
+            node.style.display = '';
+        }
+        node.removeAttribute('z-for');
+        if (node.hasAttribute(':key')) node.removeAttribute(':key');
+
+        const itemCtx = createItemContext(ctx, itemName, item, index, key);
+        assignContextRecursively(node, itemCtx);
+        el.__z_for_placeholder.parentNode.insertBefore(node, el.__z_for_placeholder);
+
+        instances.set(key, { node, context: itemCtx, key });
+
+        if (!node.__z_events_binded) {
+            node.__z_events_binded = true;
+            bindEvents(itemCtx, node);
+            bindDirectives(node, itemCtx);
+        }
+    }
+
+    function assignContextRecursively(node, ctx) {
+        setNodeContext(node, ctx);
+        if (node.children) {
+            for (const child of node.children) {
+                assignContextRecursively(child, ctx);
+            }
+        }
+    }
+
+    updateList();
+    el.__z_for_effect = updateList;
+}
 
     function bindTransition(el, ctx) {
         const expr = el.getAttribute('z-show');
@@ -1562,7 +1573,6 @@
         }
     }
 
-    // === CREACIÓN DE APPS ===
     function createApp(root) {
         log('[createApp] Iniciando creación de app para root:', root);
         // Almacenar templates antes de procesar
