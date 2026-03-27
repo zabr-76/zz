@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Manual z-jackett.js - Framework Reactivo Minimalista</title>
+    <style>
+        /* Fuentes y reset - Mismo estilo que tu página principal */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+
+        body,
+        html {
+            margin: 0 auto;
+            padding: 0;
+            height: 100%;
+            font-family: 'Roboto Mono', monospace;
+            background-color: #1a1a1a;
+            color: #ffdb4d;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 1.6;
+        }
+        .completed {
+            text-decoration: line-through;
+            color: #888;
+        }
+        header {
+            padding: 2rem 1rem 1rem;
+            text-align: center;
+            border-bottom: 1px solid #ffdb4d40;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        header h1 {
+            font-weight: 700;
+            font-size: 2.4rem;
+            margin-bottom: 0.25rem;
+            letter-spacing: 0.06em;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: #ffeea1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .github-banner {
+            margin-top: 1rem;
+        }
+
+        .github-banner a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #ffdb4d;
+            color: #1a1a1a;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .github-banner a:hover {
+            background: #f2c100;
+            transform: translateY(-2px);
+        }
+
+        main {
+            max-width: 1200px;
+            width: 95%;
+            padding: 2rem 1rem 4rem;
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        section {
+            background: #292929;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 15px #ffdb4d50;
+        }
+
+        section h2 {
+            margin-top: 0;
+            color: #ffdb4d;
+            font-weight: 700;
+            font-size: 1.8rem;
+            border-bottom: 2px solid #ffdb4d;
+            padding-bottom: 0.5rem;
+            letter-spacing: 0.04em;
+        }
+
+        section h3 {
+            color: #ffdb4d;
+            font-size: 1.4rem;
+            margin: 2rem 0 1rem;
+            border-left: 3px solid #ffdb4d;
+            padding-left: 1rem;
+        }
+
+        section p {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            color: #fff6c6;
+        }
+
+        ul, ol {
+            color: #fff2a6;
+            padding-left: 2rem;
+            margin: 1rem 0;
+        }
+
+        ul li, ol li {
+            margin-bottom: 0.75rem;
+            line-height: 1.5;
+        }
+
+        code {
+            background: #333;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            color: #ffdb4d;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        pre {
+            background: #1f1f1f;
+            border: 1px solid #ffdb4d90;
+            padding: 1.5rem;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            line-height: 1.4;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+        }
+
+        /* Botones para ejemplos */
+        button {
+            background-color: #ffdb4d;
+            border: none;
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #1a1a1a;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            margin: 0.25rem;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        button:hover {
+            background-color: #f2c100;
+        }
+
+        /* Ejemplos contenedores */
+        .example {
+            background: #1f1f1f;
+            border: 1px solid #ffdb4d90;
+            padding: 1.5rem;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.95rem;
+            margin-top: 1.5rem;
+        }
+
+        .example-live {
+            background: #252525;
+            border: 1px solid #ffdb4d60;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="email"],
+        select,
+        textarea {
+            padding: 0.5rem;
+            border-radius: 5px;
+            border: none;
+            font-size: 1rem;
+            margin: 0.25rem 0;
+            background: #333;
+            color: #ffdb4d;
+            width: 100%;
+            box-sizing: border-box;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        input[type="checkbox"],
+        input[type="radio"] {
+            margin-right: 0.5rem;
+        }
+
+        label {
+            cursor: pointer;
+            user-select: none;
+            display: block;
+            margin: 0.75rem 0;
+            color: #fff6c6;
+        }
+
+        /* Tablas */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: #1f1f1f;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border: 1px solid #ffdb4d40;
+        }
+
+        th {
+            background: #ffdb4d20;
+            color: #ffdb4d;
+            font-weight: 600;
+        }
+
+        td {
+            color: #fff6c6;
+        }
+
+        /* Navegación */
+        .nav-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            background: #333;
+            color: #ffdb4d;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid #ffdb4d40;
+        }
+
+        .nav-tab.active {
+            background: #ffdb4d;
+            color: #1a1a1a;
+        }
+
+        .nav-tab:hover {
+            background: #ffdb4d30;
+        }
+    
+        /* Mejoras para refs */
+        .color-box {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #333;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            section h2 {
+                font-size: 1.4rem;
+            }
+
+            section h3 {
+                font-size: 1.2rem;
+            }
+
+            button {
+                width: 100%;
+                margin: 0.25rem 0;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+            }
+
+            .nav-tab {
+                text-align: center;
+            }
+        }
+
+        /* Estilos específicos para ejemplos */
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            background: #333;
+            border-radius: 5px;
+            border-left: 3px solid #ffdb4d;
+        }
+
+        .product-card {
+            background: #333;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            border: 1px solid #ffdb4d40;
+        }
+
+        .product-card h4 {
+            margin: 0 0 0.5rem 0;
+            color: #ffdb4d;
+        }
+
+        .badge {
+            background: #ffdb4d;
+            color: #1a1a1a;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat-card {
+            background: #333;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            border-top: 3px solid #ffdb4d;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffdb4d;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #fff6c6;
+        }
+
+        /* Transiciones */
+        .fade-enter {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        .fade-leave {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .fade-enter-active {
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.3s ease;
+        }
+
+        .fade-leave-active {
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>📚 Manual z-jackett.js</h1>
+        <p>Guía completa para aprender a usar el framework reactivo minimalista. Ejemplos prácticos y explicaciones detalladas.</p>
+        
+        <div class="github-banner">
+            <a href="https://github.com/zabr-76/zz" target="_blank">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                </svg>
+                Ver en GitHub
+            </a>
+            <p style="margin-top: 0.5rem; font-size: 0.9rem; color: #ffeea1;">
+                CDN: <code>https://cdn.jsdelivr.net/gh/zabr-76/zz/dist/z-jackett.js</code>
+            </p>
+        </div>
+    </header>
+
+    <main>
+        <!-- Introducción -->
+        <section>
+            <h2>🚀 Introducción a z-jackett.js</h2>
+            <p>z-jackett.js es un framework JavaScript <strong>reactivo</strong> y <strong>minimalista</strong> que te permite crear interfaces modernas con HTML declarativo. Su sintaxis es sencilla y poderosa.</p>
+            
+            <h3>¿Por qué usar z-jackett.js?</h3>
+            <ul>
+                <li><strong>Fácil de aprender</strong>: Sintaxis intuitiva similar a Vue.js</li>
+                <li><strong>Reactividad automática</strong>: Los cambios en los datos se reflejan automáticamente en la UI</li>
+                <li><strong>Sin configuración compleja</strong>: Solo incluye el script y comienza a codificar</li>
+                <li><strong>Ligero</strong>: Framework minimalista sin dependencias pesadas</li>
+                <li><strong>Flexible</strong>: Puedes integrarlo en proyectos existentes</li>
+            </ul>
+
+            <div class="example">
+                <h4>Inicio rápido:</h4>
+                <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;script src="https://cdn.jsdelivr.net/gh/zabr-76/zz/dist/z-jackett.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div z-app z-data="app()"&gt;
+        &lt;h1 z-text="message"&gt;&lt;/h1&gt;
+        &lt;button @click="changeMessage()"&gt;Cambiar mensaje&lt;/button&gt;
+    &lt;/div&gt;
+
+    &lt;script&gt;
+        function app() {
+            return {
+                message: "¡Hola z-jackett!",
+                changeMessage() {
+                    this.message = "¡Mensaje cambiado!";
+                }
+            };
+        }
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            </div>
+        </section>
+
+        <!-- Directivas Básicas -->
+        <section>
+            <h2>🎯 Directivas Básicas</h2>
+            <p>Las directivas son atributos especiales que añaden comportamiento reactivo a tus elementos HTML.</p>
+
+            <div class="nav-tabs">
+                <div class="nav-tab active" onclick="showTab('tab-z-data')">z-data</div>
+                <div class="nav-tab" onclick="showTab('tab-z-text')">z-text</div>
+                <div class="nav-tab" onclick="showTab('tab-z-model')">z-model</div>
+                <div class="nav-tab" onclick="showTab('tab-z-show')">z-show</div>
+                <div class="nav-tab" onclick="showTab('tab-z-if')">z-if</div>
+            </div>
+
+            <!-- z-data -->
+            <div id="tab-z-data" class="tab-content">
+                <h3>z-data - Inicialización del Componente</h3>
+                <p>Define el estado inicial del componente. Debe ser una función que retorne un objeto.</p>
+                
+                <div class="example">
+                    <pre><code>&lt;div z-app z-data="miApp()"&gt;
+    &lt;!-- Tu contenido reactivo aquí --&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+function miApp() {
+    return {
+        contador: 0,
+        usuario: {
+            nombre: "Juan",
+            email: "juan@example.com"
+        },
+        productos: []
+    };
+}
+&lt;/script&gt;</code></pre>
+                </div>
+            </div>
+
+            <!-- z-text -->
+            <div id="tab-z-text" class="tab-content" style="display: none;">
+                <h3>z-text - Mostrar Texto</h3>
+                <p>Actualiza el textContent del elemento con el valor de la expresión.</p>
+                
+                <div class="example-live" z-app z-data="textExample()">
+                    <p>Nombre: <strong z-text="nombre"></strong></p>
+                    <p>Edad: <strong z-text="edad"></strong></p>
+                    <p>Saludo: <span z-text="saludo"></span></p>
+                    <button @click="cambiarDatos()">Cambiar Datos</button>
+                </div>
+
+                <script>
+                    function textExample() {
+                        return {
+                            nombre: "Ana",
+                            edad: 28,
+                            saludo: "¡Hola desde z-jackett!",
+                            cambiarDatos() {
+                                this.nombre = "Carlos";
+                                this.edad = 32;
+                                this.saludo = "¡Datos actualizados!";
+                            }
+                        };
+                    }
+                </script>
+            </div>
+
+            <!-- z-model -->
+            <div id="tab-z-model" class="tab-content" style="display: none;">
+                <h3>z-model - Enlace Bidireccional</h3>
+                <p>Crea un enlace bidireccional entre inputs y datos. Soporta modificadores:</p>
+                <ul>
+                    <li><code>.number</code> - Convierte a número</li>
+                    <li><code>.trim</code> - Elimina espacios en blanco</li>
+                    <li><code>.debounce</code> - Retrasa la actualización</li>
+                </ul>
+
+                <div class="example-live" z-app z-data="modelExample()">
+                    <input type="text" z-model="mensaje" placeholder="Escribe algo...">
+                    <p>Tu mensaje: <strong z-text="mensaje"></strong></p>
+                    
+                    <input type="number" z-model.number="precio" placeholder="Precio">
+                    <p>Precio: $<span z-text="precio"></span></p>
+                    
+                    <input type="text" z-model.trim="textoLimpio" placeholder="Texto con trim">
+                    <p>Texto limpio: "<span z-text="textoLimpio"></span>"</p>
+                </div>
+
+                <script>
+                    function modelExample() {
+                        return {
+                            mensaje: "",
+                            precio: 0,
+                            textoLimpio: ""
+                        };
+                    }
+                </script>
+            </div>
+
+            <!-- z-show -->
+            <div id="tab-z-show" class="tab-content" style="display: none;">
+                <h3>z-show - Mostrar/Ocultar</h3>
+                <p>Muestra u oculta elementos basado en una condición.</p>
+
+                <div class="example-live" z-app z-data="showExample()">
+                    <button @click="mostrar = !mostrar">
+                        <span z-text="mostrar ? '👁️ Ocultar' : '👁️ Mostrar'"></span> secreto
+                    </button>
+                    <p z-show="mostrar" style="padding: 1rem; background: #333; border-radius: 5px; margin-top: 1rem;">
+                        🎉 ¡Este es el mensaje secreto!
+                    </p>
+                </div>
+
+                <script>
+                    function showExample() {
+                        return {
+                            mostrar: false
+                        };
+                    }
+                </script>
+            </div>
+
+            <!-- z-if -->
+            <div id="tab-z-if" class="tab-content" style="display: none;">
+                <h3>z-if - Renderizado Condicional</h3>
+                <p>Renderiza o elimina elementos del DOM basado en una condición.</p>
+
+                <div class="example-live" z-app z-data="ifExample()">
+                    <button @click="modo = (modo === 'claro' ? 'oscuro' : 'claro')">
+                        Cambiar a modo <span z-text="modo === 'claro' ? 'oscuro' : 'claro'"></span>
+                    </button>
+                    
+                    <template z-if="modo === 'claro'">
+                        <div style="padding: 1rem; background: #ffdb4d; color: #1a1a1a; border-radius: 5px; margin-top: 1rem;">
+                            🌞 Modo claro activado
+                        </div>
+                    </template>
+                    
+                    <template z-if="modo === 'oscuro'">
+                        <div style="padding: 1rem; background: #1a1a1a; color: #ffdb4d; border-radius: 5px; margin-top: 1rem;">
+                            🌙 Modo oscuro activado
+                        </div>
+                    </template>
+                </div>
+
+                <script>
+                    function ifExample() {
+                        return {
+                            modo: 'claro'
+                        };
+                    }
+                </script>
+            </div>
+        </section>
+
+        <!-- Listas y Bucles -->
+        <section>
+            <h2>🔄 Listas Reactivas con z-for</h2>
+            <p>La directiva <code>z-for</code> te permite renderizar listas de datos de forma reactiva.</p>
+
+            <div class="example-live" z-app z-data="forExample()">
+                <h3>📝 Lista de Tareas</h3>
+                
+                <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                    <input type="text" z-model="nuevaTarea" placeholder="Nueva tarea..." 
+                           @keyup.enter="agregarTarea()" style="flex: 1;">
+                    <button @click="agregarTarea()">➕ Agregar</button>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-number" z-text="tareas.length"></div>
+                        <div class="stat-label">Total</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" z-text="tareasCompletadas"></div>
+                        <div class="stat-label">Completadas</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" z-text="tareasPendientes"></div>
+                        <div class="stat-label">Pendientes</div>
+                    </div>
+                </div>
+
+                <div>
+                    <template z-for="tarea in tareas" :key="tarea.id">
+                        <div class="task-item">
+                            <div style="display: flex; align-items: center; gap: 1rem; flex: 1;">
+                                <input type="checkbox" z-model="tarea.completada">
+                                <span z-text="tarea.texto" 
+                                      :class="tarea.completada ? 'completed' : ''"></span>
+                            </div>
+                            <button @click="eliminarTarea(tarea.id)" 
+                                    style="background: #ef4444; color: white; padding: 0.25rem 0.5rem; font-size: 0.8rem;">
+                                🗑️
+                            </button>
+                        </div>
+                    </template>
+
+                    <div z-show="tareas.length === 0" style="text-align: center; padding: 2rem; color: #fff6c6;">
+                        📝 No hay tareas. ¡Agrega una nueva!
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                function forExample() {
+                    return {
+                        tareas: [
+                            { id: 1, texto: 'Aprender z-jackett.js', completada: true },
+                            { id: 2, texto: 'Construir una aplicación', completada: false },
+                            { id: 3, texto: 'Compartir el proyecto', completada: false }
+                        ],
+                        nuevaTarea: '',
+                        agregarTarea() {
+                            if (this.nuevaTarea.trim()) {
+                                this.tareas.push({
+                                    id: Date.now(),
+                                    texto: this.nuevaTarea,
+                                    completada: false
+                                });
+                                this.nuevaTarea = '';
+                            }
+                        },
+                        eliminarTarea(id) {
+                            this.tareas = this.tareas.filter(t => t.id !== id);
+                        },
+                        tareasCompletadas() {
+                            return this.tareas.filter(t => t.completada).length;
+                        },
+                        tareasPendientes() {
+                            return this.tareas.filter(t => !t.completada).length;
+                        }
+                    };
+                }
+            </script>
+
+            <div class="example">
+                <h4>Código del ejemplo:</h4>
+                <pre><code>&lt;div z-app z-data="forExample()"&gt;
+    &lt;input type="text" z-model="nuevaTarea" @keyup.enter="agregarTarea()"&gt;
+    &lt;button @click="agregarTarea()"&gt;Agregar&lt;/button&gt;
+    
+    &lt;template z-for="tarea in tareas" :key="tarea.id"&gt;
+        &lt;div class="task-item"&gt;
+            &lt;input type="checkbox" z-model="tarea.completada"&gt;
+            &lt;span z-text="tarea.texto" :class="tarea.completada ? 'completed' : ''"&gt;&lt;/span&gt;
+            &lt;button @click="eliminarTarea(tarea.id)"&gt;Eliminar&lt;/button&gt;
+        &lt;/div&gt;
+    &lt;/template&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+function forExample() {
+    return {
+        tareas: [],
+        nuevaTarea: '',
+        agregarTarea() {
+            if (this.nuevaTarea.trim()) {
+                this.tareas.push({
+                    id: Date.now(),
+                    texto: this.nuevaTarea,
+                    completada: false
+                });
+                this.nuevaTarea = '';
+            }
+        },
+        eliminarTarea(id) {
+            this.tareas = this.tareas.filter(t => t.id !== id);
+        }
+    };
+}
+&lt;/script&gt;</code></pre>
+            </div>
+        </section>
+
+        <!-- Eventos -->
+        <section>
+            <h2>🎮 Manejo de Eventos</h2>
+            <p>Los eventos se manejan con la sintaxis <code>@evento</code> y soportan modificadores.</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Modificador</th>
+                        <th>Descripción</th>
+                        <th>Ejemplo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>.prevent</code></td>
+                        <td>Previene el comportamiento por defecto</td>
+                        <td><code>@submit.prevent</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>.stop</code></td>
+                        <td>Detiene la propagación del evento</td>
+                        <td><code>@click.stop</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>.self</code></td>
+                        <td>Solo se ejecuta si el evento ocurre en el elemento mismo</td>
+                        <td><code>@click.self</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>.enter</code></td>
+                        <td>Solo con la tecla Enter</td>
+                        <td><code>@keyup.enter</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>.esc</code></td>
+                        <td>Solo con la tecla Escape</td>
+                        <td><code>@keyup.esc</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="example-live" z-app z-data="eventsExample()">
+                <h3>Demo de Eventos</h3>
+                
+                <form @submit.prevent="procesarFormulario()">
+                    <input type="text" z-model="nombre" placeholder="Tu nombre" required>
+                    <button type="submit">Enviar (prevent)</button>
+                </form>
+                <p z-show="mensaje" style="color: #4ade80; margin-top: 1rem;" z-text="mensaje"></p>
+
+                <div style="margin-top: 2rem; padding: 1rem; background: #333; border-radius: 5px;">
+                    <p>Contador de clics externos: <strong z-text="contadorExterno"></strong></p>
+                    <button @click="contadorExterno++">Click Me (propaga)</button>
+                    <button @click.stop="contadorExterno++">Click Me (stop)</button>
+                </div>
+
+                <div style="margin-top: 1rem;">
+                    <input type="text" placeholder="Presiona Enter" @keyup.enter="teclaEnter()">
+                    <span style="margin-left: 1rem; color: #fff6c6;" z-text="ultimaTecla"></span>
+                </div>
+            </div>
+
+            <script>
+                function eventsExample() {
+                    return {
+                        nombre: "",
+                        mensaje: "",
+                        contadorExterno: 0,
+                        ultimaTecla: "",
+                        procesarFormulario() {
+                            this.mensaje = `¡Hola ${this.nombre}! Formulario procesado sin recargar.`;
+                            this.nombre = "";
+                        },
+                        teclaEnter() {
+                            this.ultimaTecla = "¡Presionaste Enter!";
+                            setTimeout(() => this.ultimaTecla = "", 2000);
+                        }
+                    };
+                }
+            </script>
+        </section>
+
+        <!-- CRUD Completo -->
+        <section>
+            <h2>🛍️ Ejemplo CRUD Completo</h2>
+            <p>Un sistema completo de Create, Read, Update, Delete usando z-jackett.js.</p>
+
+            <div class="example-live" z-app z-data="crudExample()">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <!-- Formulario -->
+                    <div>
+                        <h3>
+                            <span z-text="productoEditando ? '✏️ Editar Producto' : '➕ Nuevo Producto'"></span>
+                        </h3>
+                        
+                        <form @submit.prevent="guardarProducto()">
+                            <div style="margin-bottom: 1rem;">
+                                <label>Nombre:</label>
+                                <input type="text" z-model="formulario.nombre" required>
+                            </div>
+                            
+                            <div style="margin-bottom: 1rem;">
+                                <label>Categoría:</label>
+                                <select z-model="formulario.categoria" required>
+                                    <option value="">Seleccionar...</option>
+                                    <option value="Tecnología">💻 Tecnología</option>
+                                    <option value="Hogar">🏠 Hogar</option>
+                                    <option value="Ropa">👕 Ropa</option>
+                                </select>
+                            </div>
+                            
+                            <div style="margin-bottom: 1rem;">
+                                <label>Precio:</label>
+                                <input type="number" z-model.number="formulario.precio" step="0.01" required>
+                            </div>
+                            
+                            <div style="margin-bottom: 1rem;">
+                                <label>Descripción:</label>
+                                <textarea z-model="formulario.descripcion" rows="3"></textarea>
+                            </div>
+                            
+                            <div class="btn-group">
+                                <button type="submit" class="btn-primary">
+                                    <span z-text="productoEditando ? '🔄 Actualizar' : '💾 Guardar'"></span>
+                                </button>
+                                <button type="button" @click="cancelarEdicion()" 
+                                        z-show="productoEditando" class="btn-secondary">
+                                    ❌ Cancelar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Lista -->
+                    <div>
+                        <h3>📦 Productos (<span z-text="productos.length"></span> productos)
+                        </h3>
+
+                        <div class="stats">
+                            <div class="stat-card">
+                                <div class="stat-number" z-text="productos.length"></div>
+                                <div class="stat-label">Total</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" z-text="valorTotal.toFixed(2)"></div>
+                                <div class="stat-label">Valor Total</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" z-text="categoriasUnicas.length"></div>
+                                <div class="stat-label">Categorías</div>
+                            </div>
+                        </div>
+
+                        <div style="max-height: 400px; overflow-y: auto;">
+                            <template z-for="producto in productos" :key="producto.id">
+                                <div class="product-card fade-in">
+                                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                                        <h4 z-text="producto.nombre"></h4>
+                                        <span class="badge" z-text="producto.categoria"></span>
+                                    </div>
+                                    <p style="color: #fff6c6; margin-bottom: 0.5rem;" z-text="producto.descripcion"></p>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <strong style="color: #ffdb4d;">$<span z-text="producto.precio.toFixed(2)"></span></strong>
+                                        <div>
+                                            <button @click="editarProducto(producto.id)" 
+                                                    style="background: #3b82f6; margin-right: 0.5rem; padding: 0.25rem 0.5rem; font-size: 0.8rem;">
+                                                ✏️ Editar
+                                            </button>
+                                            <button @click="eliminarProducto(producto.id)" 
+                                                    style="background: #ef4444; padding: 0.25rem 0.5rem; font-size: 0.8rem;">
+                                                🗑️ Eliminar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+
+                            <div z-show="productos.length === 0" style="text-align: center; padding: 3rem; color: #fff6c6;">
+                                <div style="font-size: 3rem; margin-bottom: 1rem;">📦</div>
+                                <h4>No hay productos</h4>
+                                <p>Agrega tu primer producto usando el formulario</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                function crudExample() {
+                    return {
+                        productos: [
+                            {
+                                id: 1,
+                                nombre: "Laptop Gaming",
+                                categoria: "Tecnología",
+                                precio: 1200.00,
+                                descripcion: "Laptop potente para gaming y trabajo"
+                            },
+                            {
+                                id: 2,
+                                nombre: "Auriculares Bluetooth",
+                                categoria: "Tecnología", 
+                                precio: 89.99,
+                                descripcion: "Sonido de alta calidad sin cables"
+                            }
+                        ],
+                        formulario: {
+                            nombre: "",
+                            categoria: "",
+                            precio: 0,
+                            descripcion: ""
+                        },
+                        productoEditando: null,
+                        
+                        // Propiedades computadas
+                        valorTotal() {
+                            return this.productos.reduce((total, producto) => total + producto.precio, 0);
+                        },
+                        categoriasUnicas() {
+                            return [...new Set(this.productos.map(p => p.categoria))];
+                        },
+                        
+                        // Métodos CRUD
+                        guardarProducto() {
+                            if (this.productoEditando === null) {
+                                // Crear nuevo
+                                this.productos.push({
+                                    id: Date.now(),
+                                    ...this.formulario
+                                });
+                            } else {
+                                // Actualizar existente
+                                const producto = this.productos[this.productoEditando];
+                                producto.nombre = this.formulario.nombre;
+                                producto.categoria = this.formulario.categoria;
+                                producto.precio = this.formulario.precio;
+                                producto.descripcion = this.formulario.descripcion;
+                            }
+                            this.cancelarEdicion();
+                        },
+                        
+                        editarProducto(id) {
+                            const index = this.productos.findIndex(p => p.id === id);
+                            if (index !== -1) {
+                                this.formulario = { ...this.productos[index] };
+                                this.productoEditando = index;
+                            }
+                        },
+                        
+                        eliminarProducto(id) {
+                            if (confirm('¿Estás seguro de eliminar este producto?')) {
+                                this.productos = this.productos.filter(p => p.id !== id);
+                            }
+                        },
+                        
+                        cancelarEdicion() {
+                            this.formulario = {
+                                nombre: "",
+                                categoria: "", 
+                                precio: 0,
+                                descripcion: ""
+                            };
+                            this.productoEditando = null;
+                        }
+                    };
+                }
+            </script>
+        </section>
+
+        <!-- Referencias y Métodos Avanzados -->
+        <section>
+            <h2>🔗 Referencias y Métodos Avanzados</h2>
+            
+            <h3>z-ref - Acceso Directo a Elementos</h3>
+            <p>La directiva <code>z-ref</code> te permite acceder directamente a elementos del DOM.</p>
+
+            <div class="example-live" z-app z-data="refsExample()">
+                <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                    <input type="text" z-model="nombre" z-ref="inputNombre" placeholder="Escribe tu nombre">
+                    <button @click="enfocarInput()">🔍 Enfocar Input</button>
+                </div>
+                
+                <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                    <button @click="contador++">➕ Incrementar</button>
+                    <button @click="contador--">➖ Decrementar</button>
+                    <span>Contador: <strong z-text="contador"></strong></span>
+                </div>
+                
+                <div class="color-box" z-ref="cajaColor">
+                    Esta caja cambiará de color
+                </div>
+                <button @click="cambiarColor()" style="margin-top: 0.5rem;">🎨 Cambiar Color</button>
+            </div>
+
+            <script>
+                function refsExample() {
+                    return {
+                        nombre: '',
+                        contador: 0,
+                        enfocarInput() {
+                            setTimeout(() => {
+                                const input = document.querySelector('input[z-ref="inputNombre"]') || this.$refs?.inputNombre;
+                                input?.focus();
+                            }, 50);
+                        },
+                        cambiarColor() {
+                            this.$refs?.cajaColor && (this.$refs.cajaColor.style.backgroundColor = 
+                            ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57'][Math.floor(Math.random() * 5)]);
+                        }
+                    };
+                }
+            </script>
+
+            <h3>Propiedades Computadas</h3>
+            <p>Las propiedades computadas son funciones que se recalculan automáticamente cuando cambian sus dependencias.</p>
+
+            <div class="example">
+                <pre><code>function app() {
+    return {
+        precio: 100,
+        impuesto: 21,
+        descuento: 10,
+        
+        // Propiedad computada
+        precioFinal() {
+            const impuestoCalculado = this.precio * (this.impuesto / 100);
+            const descuentoCalculado = this.precio * (this.descuento / 100);
+            return this.precio + impuestoCalculado - descuentoCalculado;
+        }
+    };
+}</code></pre>
+            </div>
+        </section>
+
+        <!-- Transiciones y Animaciones -->
+        <section>
+            <h2>🎭 Transiciones y Animaciones</h2>
+            <p>z-jackett.js soporta transiciones CSS suaves con <code>z-transition</code>.</p>
+
+            <div class="example-live" z-app z-data="transitionExample()">
+                <button @click="visible = !visible">
+                    <span z-text="visible ? '👁️ Ocultar' : '👁️ Mostrar'"></span> con transición
+                </button>
+                
+                <div z-show="visible" z-transition="fade" 
+                     style="padding: 1.5rem; background: #333; border-radius: 8px; margin-top: 1rem;">
+                    <p>✨ Este elemento aparece/desaparece con transición suave</p>
+                    <p>Usando transiciones CSS personalizadas</p>
+                </div>
+            </div>
+
+            <script>
+                function transitionExample() {
+                    return {
+                        visible: false
+                    };
+                }
+            </script>
+
+            <div class="example">
+                <h4>CSS para transiciones:</h4>
+                <pre><code>.fade-enter {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+.fade-leave {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.fade-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.5s ease;
+}
+
+.fade-leave-active {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.5s ease;
+}</code></pre>
+            </div>
+        </section>
+
+        <!-- Mejores Prácticas -->
+        <section>
+            <h2>💡 Mejores Prácticas</h2>
+            
+            <h3>Estructura de Proyectos</h3>
+            <ul>
+                <li><strong>Organiza por componentes</strong>: Divide tu aplicación en componentes lógicos</li>
+                <li><strong>Usa propiedades computadas</strong>: Para lógica compleja que depende de datos reactivos</li>
+                <li><strong>Mantén los datos planos</strong>: Evita anidamientos profundos cuando sea posible</li>
+            </ul>
+
+            <h3>Rendimiento</h3>
+            <ul>
+                <li><strong>Usa <code>:key</code> en <code>z-for</code></strong>: Para listas dinámicas mejora el rendimiento</li>
+                <li><strong>Evita expresiones complejas en templates</strong>: Mueve la lógica a métodos o computadas</li>
+                <li><strong>Usa <code>z-show</code> para toggle frecuente</strong>: <code>z-if</code> para condiciones que cambian poco</li>
+            </ul>
+
+            <h3>Depuración</h3>
+            <ul>
+                <li><strong>Activa el modo debug</strong>: <code>window.Z_DEBUG = true;</code></li>
+                <li><strong>Usa el inspector</strong>: Incluye <code>z-inspector.js</code> para desarrollo</li>
+                <li><strong>Console.log estratégico</strong>: Para seguir el flujo de datos</li>
+            </ul>
+        </section>
+
+        <!-- Recursos y Ejemplos -->
+        <section>
+            <h2>📚 Recursos Adicionales</h2>
+            
+            <h3>Ejemplos Prácticos</h3>
+            <ul>
+                <li><strong>Todo App</strong>: Lista de tareas con filtros</li>
+                <li><strong>Formularios Dinámicos</strong>: Campos que aparecen según selecciones</li>
+                <li><strong>Dashboard</strong>: Múltiples componentes comunicados</li>
+                <li><strong>Carrito de Compras</strong>: Gestión de estado complejo</li>
+            </ul>
+
+            <h3>Integraciones</h3>
+            <ul>
+                <li><strong>APIs REST</strong>: Usa <code>fetch</code> en métodos para cargar datos</li>
+                <li><strong>LocalStorage</strong>: Persistencia de datos en el navegador</li>
+                <li><strong>Librerías de UI</strong>: Compatible con Tailwind CSS, Bootstrap, etc.</li>
+            </ul>
+
+            <div class="github-banner" style="margin-top: 2rem;">
+                <a href="https://cdn.jsdelivr.net/gh/zabr-76/zz/examples" target="_blank">
+                    📁 Ver más ejemplos en GitHub
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Script para tabs -->
+    <script>
+        function showTab(tabId) {
+            // Ocultar todos los tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            
+            // Remover clase active de todos los tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Mostrar tab seleccionado
+            document.getElementById(tabId).style.display = 'block';
+            
+            // Activar tab button
+            event.target.classList.add('active');
+        }
+    </script>
+
+    <!-- Framework z-jackett -->
+    <!-- <script src="https://cdn.jsdelivr.net/gh/zabr-76/zz/dist/z-jackett.js"></script>
+    --> <script src="./z-jackett.js"></script> -->
+    <script>
+        window.Z_DEBUG = true;
+    </script>
+
+</body>
+</html>
+
+
