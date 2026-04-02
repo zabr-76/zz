@@ -1,0 +1,9 @@
+{
+  "name": "z-jackett",
+  "version": "1.0.0",
+  "description": "Framework reactivo minimalista sin build steps",
+  "main": "z-jackett.min.js",
+  "keywords": ["reactive", "framework", "javascript", "no-build", "lightweight"],
+  "author": "Zenón A. Bastidas R., <zabr>",
+  "license": "MIT"
+}
