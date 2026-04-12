@@ -77,7 +77,7 @@ Hemos comparado **z-jackett.js** con **Alpine.js** en pruebas reales de rendimie
 4. Inclúyelo en tu proyecto:
    ```html
    <script src="z-jackett.min.js"></script>
-```
+   ```
 
 ### Opción 3: NPM (Próximamente)
 ```bash
