@@ -12,9 +12,13 @@
 **z-jackett.js** es un **framework JavaScript reactivo minimalista** diseñado para crear interfaces modernas con **HTML declarativo**. Inspirado en Vue.js pero con una sintaxis más simple y sin configuración compleja, ideal para proyectos pequeños y medianos.
 
 🔹 **Reactividad automática**: Los cambios en los datos se reflejan instantáneamente en la UI.
+
 🔹 **Ligero y rápido**: Sin dependencias pesadas, optimizado para rendimiento.
+
 🔹 **Fácil de aprender**: Sintaxis intuitiva similar a Vue.js.
+
 🔹 **Flexible**: Funciona en cualquier proyecto existente.
+
 
 > **¿Cómo funciona?**
 > Es un framework que permite **enlazar datos y estructura en HTML usando atributos personalizados**. Al actualizar los datos, la interfaz se actualiza automáticamente sin intervención manual, creando una experiencia reactiva fluida.
@@ -67,11 +71,13 @@ Hemos comparado **z-jackett.js** con **Alpine.js** en pruebas reales de rendimie
 ```
 
 ### Opción 2: Descarga manual
-1. Descarga el archivo desde [GitHub Releases](https://github.com/zabr-76/zz/releases).
-2. Inclúyelo en tu proyecto:
+1. Ve a [GitHub Releases](https://github.com/zabr-76/zz/releases).
+2. Busca la versión más reciente (ej: `v1.0.0`).
+3. Descarga el archivo `z-jackett.min.js` desde los **Assets** del Release.
+4. Inclúyelo en tu proyecto:
    ```html
-   <script src="path/to/z-jackett.min.js"></script>
-   ```
+   <script src="z-jackett.min.js"></script>
+```
 
 ### Opción 3: NPM (Próximamente)
 ```bash
