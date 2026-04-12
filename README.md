@@ -1,4 +1,5 @@
 # 🚀 z-jackett.js
+[Font Awesome CDN](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css)
 
 [![GitHub stars](https://img.shields.io/github/stars/zabr-76/zz?style=social)](https://github.com/zabr-76/zz/stargazers)
 [![GitHub issues](https://img.shields.io/github/issues/zabr-76/zz)](https://github.com/zabr-76/zz/issues)
@@ -7,6 +8,7 @@
 
 ---
 
+## <i class="fa-regular fa-book"></i> ¿Qué es z-jackett.js?
 ## 📌 ¿Qué es z-jackett.js?
 
 **z-jackett.js** es un **framework JavaScript reactivo minimalista** diseñado para crear interfaces modernas con **HTML declarativo**. Inspirado en Vue.js pero con una sintaxis más simple y sin configuración compleja, ideal para proyectos pequeños y medianos.
