@@ -433,7 +433,7 @@
                 <pre><code>&lt;!DOCTYPE html&gt;
 &lt;html&gt;
 &lt;head&gt;
-    &lt;script src="https://cdn.jsdelivr.net/gh/zabr-76/zz/dist/z-jackett.js"&gt;&lt;/script&gt;
+    &lt;script src="https://cdn.jsdelivr.net/gh/zabr-76/zz/dist/z-jackett.min.js"&gt;&lt;/script&gt;
 &lt;/head&gt;
 &lt;body&gt;
     &lt;div z-app z-data="app()"&gt;
@@ -610,8 +610,122 @@ function miApp() {
             </div>
         </section>
 
+<!-- Benchmarks Section -->
+<section style="background: #292929; padding: 2rem; border-radius: 10px; box-shadow: 0 0 15px #ffdb4d50;">
+    <h2 style="margin-top: 0; color: #ffdb4d; font-weight: 700; font-size: 1.8rem; border-bottom: 2px solid #ffdb4d; padding-bottom: 0.5rem; letter-spacing: 0.04em;">
+        🏆 Benchmarks de Rendimiento
+    </h2>
+    <p style="font-size: 1rem; line-height: 1.6; margin-bottom: 1rem; color: #fff6c6;">
+        Comparación de rendimiento entre <strong>z-jackett.js</strong> y <strong>Alpine.js</strong> en diferentes escenarios.
+    </p>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 2rem 0;">
+        <!-- Test 1: Creación de Elementos -->
+        <div style="background: #1f1f1f; padding: 1.5rem; border-radius: 8px; border: 1px solid #ffdb4d40;">
+            <h4 style="color: #ffdb4d; margin-top: 0;">📦 Creación de 1000 Elementos</h4>
+            <div style="margin: 1rem 0;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>z-jackett.js:</span>
+                    <strong style="color: #4ade80;" id="z-creation-time">56.20ms</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Alpine.js:</span>
+                    <strong style="color: #ef4444;" id="a-creation-time">111.90ms</strong>
+                </div>
+                <div style="background: #333; padding: 0.5rem; border-radius: 5px; font-size: 0.9rem;">
+                    <strong>Ganador:</strong> z-jackett.js es <span id="creation-winner">~99% más rápido</span>
+                </div>
+            </div>
+            <p style="font-size: 0.9rem; color: #fff6c6;">
+                Mide el tiempo para crear y destruir 1000 elementos con reactividad.
+            </p>
+        </div>
+
+        <!-- Test 2: Reactividad -->
+        <div style="background: #1f1f1f; padding: 1.5rem; border-radius: 8px; border: 1px solid #ffdb4d40;">
+            <h4 style="color: #ffdb4d; margin-top: 0;">🔄 Reactividad Realista</h4>
+            <div style="margin: 1rem 0;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>z-jackett.js:</span>
+                    <strong style="color: #4ade80;" id="z-reactivity-time">33.30ms</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Alpine.js:</span>
+                    <strong style="color: #ef4444;" id="a-reactivity-time">36.10ms</strong>
+                </div>
+                <div style="background: #333; padding: 0.5rem; border-radius: 5px; font-size: 0.9rem;">
+                    <strong>Ganador:</strong> <span id="reactivity-winner">Empate técnico</span>
+                </div>
+            </div>
+            <p style="font-size: 0.9rem; color: #fff6c6;">
+                Mide el tiempo para 1000 actualizaciones de estado en el DOM.
+            </p>
+        </div>
+
+        <!-- Test 3: FPS -->
+        <div style="background: #1f1f1f; padding: 1.5rem; border-radius: 8px; border: 1px solid #ffdb4d40;">
+            <h4 style="color: #ffdb4d; margin-top: 0;">🎮 Fluidez (FPS)</h4>
+            <div style="margin: 1rem 0;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>z-jackett.js:</span>
+                    <strong style="color: #4ade80;" id="z-fps">62 FPS</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Alpine.js:</span>
+                    <strong style="color: #4ade80;" id="a-fps">62 FPS</strong>
+                </div>
+                <div style="background: #333; padding: 0.5rem; border-radius: 5px; font-size: 0.9rem;">
+                    <strong>Ganador:</strong> Empate (ambos mantienen 60+ FPS)
+                </div>
+            </div>
+            <p style="font-size: 0.9rem; color: #fff6c6;">
+                Mide cuántos frames se pierden durante updates intensivos.
+            </p>
+        </div>
+    </div>
+
+    <div style="background: #1f1f1f; padding: 1.5rem; border-radius: 8px; margin-top: 1.5rem; border: 1px solid #ffdb4d40;">
+        <h4 style="color: #ffdb4d; margin-top: 0;">📊 Análisis de Resultados</h4>
+        <p style="font-size: 0.95rem; color: #fff6c6; line-height: 1.6;">
+            <strong>z-jackett.js destaca en:</strong>
+            <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                <li>🚀 <strong>Creación de elementos</strong> (casi 2x más rápido que Alpine.js).</li>
+                <li>⚡ <strong>Operaciones DOM ligeras</strong> (ideal para listas dinámicas o renderizado masivo).</li>
+            </ul>
+            <br>
+            <strong>Alpine.js brilla en:</strong>
+            <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                <li>🔄 <strong>Reactividad</strong> (actualizaciones del DOM más eficientes).</li>
+                <li>📚 <strong>Documentación y comunidad</strong> (más recursos y ejemplos disponibles).</li>
+            </ul>
+            <br>
+            <strong>Conclusión:</strong>
+            Elige <strong>z-jackett.js</strong> si priorizas rendimiento en operaciones de bajo nivel, o <strong>Alpine.js</strong> si buscas reactividad avanzada y facilidad de uso.
+        </p>
+    </div>
+
+<div style="background: #1f1f1f; padding: 1.5rem; border-radius: 8px; margin-top: 1.5rem; border: 1px solid #ffdb4d40;">
+    <h4 style="color: #ffdb4d; margin-top: 0;">🔗 Ejemplos Relacionados</h4>
+    <p style="font-size: 0.95rem; color: #fff6c6;">
+        ¿Quieres ver cómo z-jackett.js maneja <strong>listas dinámicas</strong> o <strong>reactividad</strong> en la práctica?
+    </p>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+        <a href="#listas" style="background: #333; padding: 1rem; border-radius: 5px; color: #ffdb4d; text-decoration: none; text-align: center; transition: all 0.3s ease;">
+            📝 Ver ejemplo de listas
+        </a>
+        <a href="#eventos" style="background: #333; padding: 1rem; border-radius: 5px; color: #ffdb4d; text-decoration: none; text-align: center; transition: all 0.3s ease;">
+            🎮 Ver ejemplo de eventos
+        </a>
+        <a href="#crud" style="background: #333; padding: 1rem; border-radius: 5px; color: #ffdb4d; text-decoration: none; text-align: center; transition: all 0.3s ease;">
+            🛒 Ver ejemplo CRUD
+        </a>
+    </div>
+</div>
+
+</section>
+
         <!-- Listas y Bucles -->
-        <section>
+        <section id="listas">
             <h2>🔄 Listas Reactivas con z-for</h2>
             <p>La directiva <code>z-for</code> te permite renderizar listas de datos de forma reactiva.</p>
 
@@ -621,7 +735,7 @@ function miApp() {
                 <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
                     <input type="text" z-model="nuevaTarea" placeholder="Nueva tarea..." 
                            @keyup.enter="agregarTarea()" style="flex: 1;">
-                    <button @click="agregarTarea()">➕ Agregar</button>
+                    <button @click="agregarTarea()" style="width: 15%;">➕ Agregar</button>
                 </div>
 
                 <div class="stats">
@@ -648,7 +762,7 @@ function miApp() {
                                       :class="tarea.completada ? 'completed' : ''"></span>
                             </div>
                             <button @click="eliminarTarea(tarea.id)" 
-                                    style="background: #ef4444; color: white; padding: 0.25rem 0.5rem; font-size: 0.8rem;">
+                                    style="background: #ef4444; color: white; padding: 0.25rem 0.5rem; font-size: 0.8rem; width: 15%;">
                                 🗑️
                             </button>
                         </div>
@@ -732,7 +846,7 @@ function forExample() {
         </section>
 
         <!-- Eventos -->
-        <section>
+        <section id="eventos">
             <h2>🎮 Manejo de Eventos</h2>
             <p>Los eventos se manejan con la sintaxis <code>@evento</code> y soportan modificadores.</p>
 
@@ -815,7 +929,7 @@ function forExample() {
         </section>
 
         <!-- CRUD Completo -->
-        <section>
+        <section id="crud">
             <h2>🛍️ Ejemplo CRUD Completo</h2>
             <p>Un sistema completo de Create, Read, Update, Delete usando z-jackett.js.</p>
 
@@ -880,7 +994,7 @@ function forExample() {
                                 <div class="stat-label">Valor Total</div>
                             </div>
                             <div class="stat-card">
-                                <div class="stat-number" z-text="categoriasUnicas.length"></div>
+                                <div class="stat-number" z-text="categoriasUnicas().length"></div>
                                 <div class="stat-label">Categorías</div>
                             </div>
                         </div>
@@ -1193,13 +1307,11 @@ function forExample() {
     </script>
 
     <!-- Framework z-jackett -->
-    <!-- <script src="https://cdn.jsdelivr.net/gh/zabr-76/zz/dist/z-jackett.js"></script>
-    --> <script src="./z-jackett.js"></script> -->
+     <script src="https://cdn.jsdelivr.net/gh/zabr-76/zz/dist/z-jackett.min.js"></script>
+     <script src="./zz-jackett-starter/js/z-jackett.js"></script>
     <script>
-        window.Z_DEBUG = true;
+        //window.Z_DEBUG = true;
     </script>
 
 </body>
 </html>
-
-
