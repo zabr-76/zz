@@ -11,8 +11,11 @@
 **z-jackett.js** es un **framework JavaScript reactivo minimalista** diseñado para crear interfaces modernas con **HTML declarativo**. Inspirado en Vue.js pero con una sintaxis más simple y sin configuración compleja, ideal para proyectos pequeños y medianos.
 
 🔹 **Reactividad automática**: Los cambios en los datos se reflejan instantáneamente en la UI.
+
 🔹 **Ligero y rápido**: Sin dependencias pesadas, optimizado para rendimiento.
+
 🔹 **Fácil de aprender**: Sintaxis intuitiva similar a Vue.js.
+
 🔹 **Flexible**: Funciona en cualquier proyecto existente.
 
 ---
@@ -336,7 +339,7 @@ Este proyecto está bajo la **Licencia MIT**. Consulta el archivo [LICENSE](http
 
 ## 📬 Contacto
 
-📧 **Email**: [zabr.76@gmail.com](mailto:zabr.76@gmail.com)
+📧 **Email**: [cainsan76@gmail.com](mailto:cainsan76@gmail.com)
 🐦 **Twitter**: [@zabr_76](https://twitter.com/zabr_76)
 💬 **Discord**: Únete a nuestro [servidor de Discord](https://discord.gg/ejemplo) (próximamente)
 
