@@ -353,26 +353,3 @@ Este proyecto está bajo la **Licencia MIT**. Consulta el archivo [LICENSE](http
 📌 **¿Te gustó z-jackett.js?** ¡Dale una ⭐ en GitHub y comparte el proyecto!
 
 [![GitHub stars](https://img.shields.io/github/stars/zabr-76/zz?style=social)](https://github.com/zabr-76/zz/stargazers)
-```
-
----
-
-## **📌 ¿Cómo usar este README.md?**
-
-1. **Crea un archivo `README.md`** en la raíz de tu repositorio.
-2. **Copia y pega** el contenido que te proporcioné.
-3. **Personaliza** los enlaces de contacto, Discord, etc.
-4. **Sube los cambios** a GitHub.
-
----
-
-## **🎯 Beneficios de este README.md**
-
-✅ **Profesional y completo**: Cubre todo lo que un desarrollador necesita saber.
-✅ **Benchmark integrado**: Muestra datos reales de rendimiento.
-✅ **Ejemplos prácticos**: Facilita el aprendizaje.
-✅ **Comparación clara**: Ayuda a los usuarios a elegir el framework adecuado.
-✅ **Guía de contribución**: Fomenta la participación de la comunidad.
-
----
-Si necesitas ajustar algo más (como enlaces, imágenes o secciones), dime y lo personalizamos juntos. 😊 ¡Este README.md hará que tu proyecto destaque en GitHub! 🚀
