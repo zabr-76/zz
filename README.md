@@ -1,4 +1,5 @@
 # 🚀 z-jackett.js
+
 [![GitHub stars](https://img.shields.io/github/stars/zabr-76/zz?style=social)](https://github.com/zabr-76/zz/stargazers)
 [![GitHub issues](https://img.shields.io/github/issues/zabr-76/zz)](https://github.com/zabr-76/zz/issues)
 [![GitHub license](https://img.shields.io/github/license/zabr-76/zz)](https://github.com/zabr-76/zz/blob/main/LICENSE)
@@ -11,12 +12,12 @@
 **z-jackett.js** es un **framework JavaScript reactivo minimalista** diseñado para crear interfaces modernas con **HTML declarativo**. Inspirado en Vue.js pero con una sintaxis más simple y sin configuración compleja, ideal para proyectos pequeños y medianos.
 
 🔹 **Reactividad automática**: Los cambios en los datos se reflejan instantáneamente en la UI.
-
 🔹 **Ligero y rápido**: Sin dependencias pesadas, optimizado para rendimiento.
-
 🔹 **Fácil de aprender**: Sintaxis intuitiva similar a Vue.js.
-
 🔹 **Flexible**: Funciona en cualquier proyecto existente.
+
+> **¿Cómo funciona?**
+> Es un framework que permite **enlazar datos y estructura en HTML usando atributos personalizados**. Al actualizar los datos, la interfaz se actualiza automáticamente sin intervención manual, creando una experiencia reactiva fluida.
 
 ---
 
@@ -26,12 +27,15 @@
 |---------------|-------------|
 | **📦 z-data** | Inicializa el estado del componente. |
 | **🔄 z-text** | Muestra texto reactivo en el DOM. |
-| **🔗 z-model** | Enlace bidireccional con inputs. |
+| **🔗 z-html** | Renderiza HTML reactivo (cuidado con XSS). |
+| **🔗 z-bind** | Enlaza atributos HTML dinámicamente. |
 | **👁️ z-show** | Muestra/oculta elementos basado en condiciones. |
 | **🔍 z-if** | Renderizado condicional (elimina elementos del DOM). |
 | **🔁 z-for** | Renderiza listas de datos reactivamente. |
+| **📡 z-model** | Enlace bidireccional con inputs. |
+| **🎨 z-class / :class** | Aplica clases CSS dinámicamente. |
 | **🎯 z-ref** | Accede directamente a elementos del DOM. |
-| **🎨 z-transition** | Transiciones CSS suaves. |
+| **🎭 z-transition** | Transiciones CSS suaves. |
 | **📡 @eventos** | Manejo de eventos con modificadores. |
 
 ---
@@ -106,7 +110,7 @@ npm install z-jackett
 
 ---
 
-## 📖 Documentación de directivas
+## 📖 Documentación completa de directivas
 
 ### 1. **z-data**
 Define el estado inicial del componente.
@@ -138,7 +142,64 @@ Muestra texto reactivo en el DOM.
 
 ---
 
-### 3. **z-model**
+### 3. **z-html**
+Renderiza HTML reactivo (⚠️ **Cuidado con XSS**).
+
+```html
+<div z-html="htmlContent"></div>
+
+<script>
+function app() {
+    return {
+        htmlContent: "<strong>Texto en negrita</strong> desde datos"
+    };
+}
+</script>
+```
+
+---
+
+### 4. **z-bind**
+Enlaza atributos HTML dinámicamente.
+
+```html
+<div z-bind:class="{ activo: estaActivo }"></div>
+<div z-bind:style="{ color: colorTexto }"></div>
+
+<script>
+function app() {
+    return {
+        estaActivo: true,
+        colorTexto: "red"
+    };
+}
+</script>
+```
+
+---
+
+### 5. **z-class / :class**
+Aplica clases CSS dinámicamente.
+
+```html
+<!-- Opción 1: z-class -->
+<div z-class="{ activo: estaActivo, 'bg-red': estaActivo }"></div>
+
+<!-- Opción 2: :class (sintaxis alternativa) -->
+<div :class="{ activo: estaActivo }"></div>
+
+<script>
+function app() {
+    return {
+        estaActivo: true
+    };
+}
+</script>
+```
+
+---
+
+### 6. **z-model**
 Enlace bidireccional con inputs (soporta `.number`, `.trim`, `.debounce`).
 
 ```html
@@ -151,7 +212,7 @@ Enlace bidireccional con inputs (soporta `.number`, `.trim`, `.debounce`).
 
 ---
 
-### 4. **z-show / z-if**
+### 7. **z-show / z-if**
 Muestra u oculta elementos (`z-show`) o los elimina del DOM (`z-if`).
 
 ```html
@@ -166,8 +227,7 @@ Muestra u oculta elementos (`z-show`) o los elimina del DOM (`z-if`).
 ```
 
 ---
-
-### 5. **z-for**
+### 8. **z-for**
 Renderiza listas de datos reactivamente.
 
 ```html
@@ -191,8 +251,7 @@ function app() {
 ```
 
 ---
-
-### 6. **z-ref**
+### 9. **z-ref**
 Accede directamente a elementos del DOM.
 
 ```html
@@ -211,8 +270,7 @@ function app() {
 ```
 
 ---
-
-### 7. **@eventos**
+### 10. **@eventos**
 Manejo de eventos con modificadores.
 
 ```html
@@ -232,8 +290,7 @@ Manejo de eventos con modificadores.
 ```
 
 ---
-
-### 8. **z-transition**
+### 11. **z-transition**
 Transiciones CSS suaves.
 
 ```html
@@ -355,4 +412,4 @@ Este proyecto está bajo la **Licencia MIT**. Consulta el archivo [LICENSE](http
 
 📌 **¿Te gustó z-jackett.js?** ¡Dale una ⭐ en GitHub y comparte el proyecto!
 
-[![GitHub stars](https://img.shields.io/github/stars/zabr-76/zz?style=social)](https://github.com/zabr-76/zz/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/zabr-76/zz?style=social)](https://github.com/zabr-76/zz/stargazers
