@@ -412,4 +412,4 @@ Este proyecto está bajo la **Licencia MIT**. Consulta el archivo [LICENSE](http
 
 📌 **¿Te gustó z-jackett.js?** ¡Dale una ⭐ en GitHub y comparte el proyecto!
 
-[![GitHub stars](https://img.shields.io/github/stars/zabr-76/zz?style=social)](https://github.com/zabr-76/zz/stargazers
+[![GitHub stars](https://img.shields.io/github/stars/zabr-76/zz?style=social)](https://github.com/zabr-76/zz/stargazers)
